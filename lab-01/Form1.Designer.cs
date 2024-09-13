@@ -39,15 +39,14 @@
             // 
             tableLayoutPanel1.ColumnCount = 1;
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 20F));
             tableLayoutPanel1.Controls.Add(drawButton, 0, 0);
             tableLayoutPanel1.Controls.Add(drawArea, 0, 1);
             tableLayoutPanel1.Dock = DockStyle.Fill;
             tableLayoutPanel1.Location = new Point(0, 0);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
             tableLayoutPanel1.RowCount = 2;
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 10F));
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 90F));
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 50F));
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             tableLayoutPanel1.Size = new Size(800, 450);
             tableLayoutPanel1.TabIndex = 0;
             // 
@@ -57,7 +56,7 @@
             drawButton.Font = new Font("Segoe UI Black", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
             drawButton.Location = new Point(3, 3);
             drawButton.Name = "drawButton";
-            drawButton.Size = new Size(794, 39);
+            drawButton.Size = new Size(794, 44);
             drawButton.TabIndex = 0;
             drawButton.Text = "Отрисовать";
             drawButton.UseVisualStyleBackColor = true;
@@ -66,9 +65,9 @@
             // drawArea
             // 
             drawArea.Dock = DockStyle.Fill;
-            drawArea.Location = new Point(3, 48);
+            drawArea.Location = new Point(3, 53);
             drawArea.Name = "drawArea";
-            drawArea.Size = new Size(794, 399);
+            drawArea.Size = new Size(794, 394);
             drawArea.TabIndex = 1;
             drawArea.TabStop = false;
             // 
