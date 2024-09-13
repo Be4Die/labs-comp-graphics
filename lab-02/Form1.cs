@@ -10,25 +10,34 @@ namespace lab_02
         private CancellationTokenSource? _updateCancellationToken;
         private readonly int _updateDelay = 50;
         private Task? _updateDrawTask;
+        private bool _isPaused;
 
         public Form1()
         {
             InitializeComponent();
             _currentGraphics = drawArea.CreateGraphics();
             _stars = new Star[0];
-            CreateStars(1000);
+            CreateStars(GetStarCount());
         }
 
 
         private void DrawStar(Star star)
         {
             var brush = new SolidBrush(star.Color);
-            _currentGraphics.FillEllipse(brush,
-                (int)(star.X + (star.Size / 2)),
-                (int)(star.Y + (star.Size / 2)),
-                star.Size,
-                star.Size
-            );
+            var x = (int)(star.X + (star.Size / 2));
+            var y = (int)(star.Y + (star.Size / 2));
+
+            int n = trackCheckBox.Checked ? 7 : 1;
+
+            for (int i = 0; i < n; i++)
+            {
+                _currentGraphics.FillEllipse(brush,
+                    (int)(x - ((star.Size * .5f) * i) * star.VelocityX),
+                    (int)(y - ((star.Size * .5f) * i) * star.VelocityY),
+                    star.Size,
+                    star.Size
+                );
+            }
         }
 
         private void CreateStars(int n)
@@ -40,7 +49,7 @@ namespace lab_02
             {
                 _stars[i] = new Star(
                     Color.FromArgb(_random.Next(256), _random.Next(256), _random.Next(256)),
-                    _random.Next(1, 5),
+                    _random.Next(GetMinStarSize(), GetMaxStarSize()),
                     (float)_random.NextDouble() * width,
                     (float)_random.NextDouble() * height,
                     500f);
@@ -54,8 +63,9 @@ namespace lab_02
 
         private void OnSimulationClick(object sender, EventArgs e)
         {
+            _isPaused = false;
             _currentGraphics = drawArea.CreateGraphics();
-            CreateStars(1000);
+            CreateStars(GetStarCount());
 
             _updateCancellationToken?.Cancel();
             _updateCancellationToken = new CancellationTokenSource();
@@ -67,11 +77,14 @@ namespace lab_02
                 {
                     while (!_updateCancellationToken.IsCancellationRequested)
                     {
-                        _currentGraphics.Clear(Color.Black);
-                        foreach (var star in _stars)
+                        if (!_isPaused)
                         {
-                            star.Update(_updateDelay / 1000.0f);
-                            DrawStar(star);
+                            _currentGraphics.Clear(Color.Black);
+                            foreach (var star in _stars)
+                            {
+                                star.Update(_updateDelay / 1000.0f);
+                                DrawStar(star);
+                            }
                         }
                         await Task.Delay(_updateDelay, token);
                     }
@@ -123,6 +136,50 @@ namespace lab_02
                 // Устанавливаем скорость звезды в направлении от центра
                 star.SetVelocity((float)directionX, (float)directionY);
             }
+        }
+
+        private void OnSpeedValueChanged(object sender, EventArgs e)
+        {
+            foreach (var star in _stars)
+            {
+                star.Speed = speedTrackBar.Value * 100f;
+            }
+        }
+
+        private int GetStarCount()
+        {
+            if (int.TryParse(starCountTextBox.Text, out var n) && n > 0) return n;
+            MessageBox.Show("Колличество звезд должно быть положительно!!");
+            return 1000;
+        }
+
+        private int GetMinStarSize()
+        {
+            if (int.TryParse(minStarSizeTextBox.Text, out var n) && n > 0) return n;
+            MessageBox.Show("Размер звезд должно быть положительно!!");
+            return 1;
+        }
+
+        private int GetMaxStarSize()
+        {
+            if (int.TryParse(maxStarSizeTextBox.Text, out var n) && n > 0) return n;
+            MessageBox.Show("Размер звезд должно быть положительно!!");
+            return 1;
+        }
+
+        private void OnPauseClick(object sender, EventArgs e)
+        {
+            _isPaused = true;
+        }
+
+        private void OnResumeClick(object sender, EventArgs e)
+        {
+            _isPaused = false;
+        }
+
+        private void OnSpawnClick(object sender, EventArgs e)
+        {
+
         }
     }
 }

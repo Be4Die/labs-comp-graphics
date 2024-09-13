@@ -6,6 +6,8 @@ namespace lab_02
     {
         public float X { get; private set; }
         public float Y { get; private set; }
+        public float VelocityX => _velocityX;
+        public float VelocityY => _velocityY;
         public float Speed { get; set; }
         public readonly int Size;
         public readonly Color Color;
